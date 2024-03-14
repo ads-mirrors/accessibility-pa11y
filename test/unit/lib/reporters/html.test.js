@@ -6,14 +6,14 @@ const path = require('path');
 
 describe('lib/reporters/html', () => {
 	let fs;
-	let hogan;
+	let mustache;
 	let reporter;
 
 	beforeEach(() => {
 		fs = require('../../mock/fs');
 		mockery.registerMock('fs', fs);
-		hogan = require('../../mock/hogan');
-		mockery.registerMock('hogan.js', hogan);
+		mustache = require('../../mock/mustache');
+		mockery.registerMock('mustache.js', mustache);
 		reporter = require('../../../../lib/reporters/html');
 	});
 
@@ -53,15 +53,11 @@ describe('lib/reporters/html', () => {
 			assert.calledWith(fs.readFile, path.resolve(`${__dirname}/../../../../lib/reporters/report.html`), 'utf-8');
 		});
 
-		it('compiles the template string', () => {
-			assert.calledOnce(hogan.compile);
-			assert.calledWith(hogan.compile, 'mock template content');
-		});
-
 		it('renders the template with a context object that uses the Pa11y results', () => {
-			assert.calledOnce(hogan.mockTemplate.render);
-			assert.isObject(hogan.mockTemplate.render.firstCall.args[0]);
-			const renderContext = hogan.mockTemplate.render.firstCall.args[0];
+			assert.calledOnce(mustache.render);
+			assert.isObject(mustache.render.firstCall.args[0]);
+
+			const renderContext = mustache.render.firstCall.args[0];
 			assert.instanceOf(renderContext.date, Date);
 			assert.strictEqual(renderContext.documentTitle, mockPa11yResults.documentTitle);
 			assert.strictEqual(renderContext.pageUrl, mockPa11yResults.pageUrl);
