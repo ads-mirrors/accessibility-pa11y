@@ -12,8 +12,8 @@ describe('lib/reporters/html', () => {
 	beforeEach(() => {
 		fs = require('../../mock/fs.mock');
 		mockery.registerMock('fs', fs);
-		mustache = require('../../mock/mustache');
-		mockery.registerMock('mustache.js', mustache);
+		mustache = require('../../mock/mustache.mock');
+		mockery.registerMock('mustache', mustache);
 		reporter = require('../../../../lib/reporters/html');
 	});
 
@@ -55,9 +55,9 @@ describe('lib/reporters/html', () => {
 
 		it('renders the template with a context object that uses the Pa11y results', () => {
 			assert.calledOnce(mustache.render);
-			assert.isObject(mustache.render.firstCall.args[0]);
+			assert.isString(mustache.render.firstCall.args[0]);
 
-			const renderContext = mustache.render.firstCall.args[0];
+			const renderContext = mustache.render.firstCall.args[1];
 			assert.instanceOf(renderContext.date, Date);
 			assert.strictEqual(renderContext.documentTitle, mockPa11yResults.documentTitle);
 			assert.strictEqual(renderContext.pageUrl, mockPa11yResults.pageUrl);
