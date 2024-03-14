@@ -9,15 +9,18 @@ sinon.assert.expose(assert, {
 	prefix: ''
 });
 
-beforeEach(function() {
-	mockery.enable({
-		useCleanCache: true,
-		warnOnUnregistered: false,
-		warnOnReplace: false
-	});
-});
-
-afterEach(function() {
-	mockery.deregisterAll();
-	mockery.disable();
-});
+module.exports = {
+	mochaHooks: {
+		beforeEach() {
+			mockery.enable({
+				useCleanCache: true,
+				warnOnUnregistered: false,
+				warnOnReplace: false
+			});
+		},
+		afterEach() {
+			mockery.deregisterAll();
+			mockery.disable();
+		}
+	}
+};

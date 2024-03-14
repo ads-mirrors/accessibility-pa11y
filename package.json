@@ -61,7 +61,7 @@
   "scripts": {
     "lint": "eslint .",
     "verify-coverage": "c8 check-coverage --lines 90 --functions 90 --branches 90",
-    "test-unit": "mocha --file test/unit/setup.test.js 'test/unit/**/*.test.js' --recursive",
+    "test-unit": "mocha 'test/unit/**/*.test.js' --parallel --recursive --require test/unit/setup.test.js",
     "test-coverage": "c8 --all --reporter=text --reporter=html -- npm run test-unit",
     "test-integration": "mocha --file test/integration/setup.test.js test/integration/**/*.test.js --recursive --timeout 10000 --slow 5000",
     "test": "npm run test-coverage && npm run verify-coverage && npm run test-integration"
