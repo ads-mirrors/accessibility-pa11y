@@ -3,8 +3,6 @@
 const assert = require('proclaim');
 const runPa11yCli = require('../helper/pa11y-cli');
 
-require('../setup.test');
-
 // Note: we use the JSON reporter in here to make it easier
 // to inspect the output issues. The regular CLI output is
 // tested in the reporter tests
