@@ -46,7 +46,7 @@
   },
   "devDependencies": {
     "eslint": "^8.57.0",
-    "mocha": "^8.4.0",
+    "mocha": "^10.3.0",
     "mockery": "^2.1.0",
     "nyc": "^15.1.0",
     "pa11y-lint-config": "^3.0.0",
