@@ -2,29 +2,29 @@
 
 const assert = require('proclaim');
 
-describe('lib/reporters/csv', () => {
+describe('lib/reporters/csv', function() {
 	let csvReporter;
 
-	beforeEach(() => {
+	beforeEach(function() {
 		csvReporter = require('../../../../lib/reporters/csv');
 	});
 
-	it('is an object', () => {
+	it('is an object', function() {
 		assert.isObject(csvReporter);
 	});
 
-	it('has a `supports` property', () => {
+	it('has a `supports` property', function() {
 		assert.isString(csvReporter.supports);
 	});
 
-	it('has a `results` method', () => {
+	it('has a `results` method', function() {
 		assert.isFunction(csvReporter.results);
 	});
 
-	describe('.results(pa11yResults)', () => {
+	describe('.results(pa11yResults)', function() {
 		let mockPa11yResults;
 
-		beforeEach(() => {
+		beforeEach(function() {
 			mockPa11yResults = {
 				documentTitle: 'mock title',
 				pageUrl: 'http://mock-url/',
@@ -54,7 +54,7 @@ describe('lib/reporters/csv', () => {
 			};
 		});
 
-		it('returns a CSV string representing the results', () => {
+		it('returns a CSV string representing the results', function() {
 			assert.strictEqual(csvReporter.results(mockPa11yResults), `
 				"type","code","message","context","selector"
 				"mock-type-1","mock-code-1","mock-message-1","mock-context-1","mock-selector-1"
@@ -65,27 +65,27 @@ describe('lib/reporters/csv', () => {
 
 	});
 
-	it('has an `error` method', () => {
+	it('has an `error` method', function() {
 		assert.isFunction(csvReporter.error);
 	});
 
-	describe('.error(message)', () => {
+	describe('.error(message)', function() {
 
-		it('returns the message unchanged', () => {
+		it('returns the message unchanged', function() {
 			assert.strictEqual(csvReporter.error('mock message'), 'mock message');
 		});
 
 	});
 
-	it('does not have a `begin` method', () => {
+	it('does not have a `begin` method', function() {
 		assert.isUndefined(csvReporter.begin);
 	});
 
-	it('does not have a `debug` method', () => {
+	it('does not have a `debug` method', function() {
 		assert.isUndefined(csvReporter.debug);
 	});
 
-	it('does not have an `info` method', () => {
+	it('does not have an `info` method', function() {
 		assert.isUndefined(csvReporter.info);
 	});
 

@@ -3,44 +3,44 @@
 const mockery = require('mockery');
 const assert = require('proclaim');
 
-describe('lib/reporters/cli', () => {
+describe('lib/reporters/cli', function() {
 	let kleur;
 	let cliReporter;
 
-	beforeEach(() => {
+	beforeEach(function() {
 		kleur = require('../../mock/kleur');
 		mockery.registerMock('kleur', kleur);
 		cliReporter = require('../../../../lib/reporters/cli');
 	});
 
-	it('is an object', () => {
+	it('is an object', function() {
 		assert.isObject(cliReporter);
 	});
 
-	it('has a `supports` property', () => {
+	it('has a `supports` property', function() {
 		assert.isString(cliReporter.supports);
 	});
 
-	it('has a `begin` method', () => {
+	it('has a `begin` method', function() {
 		assert.isFunction(cliReporter.begin);
 	});
 
-	describe('.begin()', () => {
+	describe('.begin()', function() {
 
-		it('returns a welcome message decorated for CLI output', () => {
+		it('returns a welcome message decorated for CLI output', function() {
 			assert.strictEqual(cliReporter.begin(), '\nWelcome to Pa11y\n');
 		});
 
 	});
 
-	it('has a `results` method', () => {
+	it('has a `results` method', function() {
 		assert.isFunction(cliReporter.results);
 	});
 
-	describe('.results(pa11yResults)', () => {
+	describe('.results(pa11yResults)', function() {
 		let mockPa11yResults;
 
-		beforeEach(() => {
+		beforeEach(function() {
 			mockPa11yResults = {
 				documentTitle: 'mock title',
 				pageUrl: 'http://mock-url/',
@@ -70,7 +70,7 @@ describe('lib/reporters/cli', () => {
 			};
 		});
 
-		it('returns the issues decorated for CLI output', () => {
+		it('returns the issues decorated for CLI output', function() {
 			assert.strictEqual(cliReporter.results(mockPa11yResults), `
 				Results for URL: http://mock-url/
 
@@ -95,55 +95,55 @@ describe('lib/reporters/cli', () => {
 			`.replace(/\t+/g, ''));
 		});
 
-		describe('when `pa11yResults` has no errors', () => {
+		describe('when `pa11yResults` has no errors', function() {
 
-			beforeEach(() => {
+			beforeEach(function() {
 				mockPa11yResults.issues = mockPa11yResults.issues.filter(issue => {
 					return issue.type !== 'error';
 				});
 			});
 
-			it('Does not include the error summary in the output', () => {
+			it('Does not include the error summary in the output', function() {
 				assert.notMatch(cliReporter.results(mockPa11yResults), /1 errors/i);
 			});
 
 		});
 
-		describe('when `pa11yResults` has no warnings', () => {
+		describe('when `pa11yResults` has no warnings', function() {
 
-			beforeEach(() => {
+			beforeEach(function() {
 				mockPa11yResults.issues = mockPa11yResults.issues.filter(issue => {
 					return issue.type !== 'warning';
 				});
 			});
 
-			it('Does not include the warning summary in the output', () => {
+			it('Does not include the warning summary in the output', function() {
 				assert.notMatch(cliReporter.results(mockPa11yResults), /1 warnings/i);
 			});
 
 		});
 
-		describe('when `pa11yResults` has no notices', () => {
+		describe('when `pa11yResults` has no notices', function() {
 
-			beforeEach(() => {
+			beforeEach(function() {
 				mockPa11yResults.issues = mockPa11yResults.issues.filter(issue => {
 					return issue.type !== 'notice';
 				});
 			});
 
-			it('Does not include the notice summary in the output', () => {
+			it('Does not include the notice summary in the output', function() {
 				assert.notMatch(cliReporter.results(mockPa11yResults), /1 notices/i);
 			});
 
 		});
 
-		describe('when `pa11yResults` has no issues', () => {
+		describe('when `pa11yResults` has no issues', function() {
 
-			beforeEach(() => {
+			beforeEach(function() {
 				mockPa11yResults.issues = [];
 			});
 
-			it('returns a success message', () => {
+			it('returns a success message', function() {
 				assert.strictEqual(cliReporter.results(mockPa11yResults), `
 					No issues found!
 				`.replace(/\t+/g, ''));
@@ -153,19 +153,19 @@ describe('lib/reporters/cli', () => {
 
 	});
 
-	it('has an `error` method', () => {
+	it('has an `error` method', function() {
 		assert.isFunction(cliReporter.error);
 	});
 
-	describe('.error(message)', () => {
+	describe('.error(message)', function() {
 
-		it('returns the message decorated for CLI output', () => {
+		it('returns the message decorated for CLI output', function() {
 			assert.strictEqual(cliReporter.error('mock message'), '\nError: mock message\n');
 		});
 
-		describe('when `message` already starts with the text "Error:"', () => {
+		describe('when `message` already starts with the text "Error:"', function() {
 
-			it('returns the message decorated for CLI output, not adding "Error:"', () => {
+			it('returns the message decorated for CLI output, not adding "Error:"', function() {
 				assert.strictEqual(cliReporter.error('Error: mock'), '\nError: mock\n');
 			});
 
@@ -173,25 +173,25 @@ describe('lib/reporters/cli', () => {
 
 	});
 
-	it('has an `info` method', () => {
+	it('has an `info` method', function() {
 		assert.isFunction(cliReporter.info);
 	});
 
-	describe('.info(message)', () => {
+	describe('.info(message)', function() {
 
-		it('returns the message decorated for CLI output', () => {
+		it('returns the message decorated for CLI output', function() {
 			assert.strictEqual(cliReporter.info('mock message'), ' > mock message');
 		});
 
 	});
 
-	it('has a `debug` method', () => {
+	it('has a `debug` method', function() {
 		assert.isFunction(cliReporter.debug);
 	});
 
-	describe('.debug(message)', () => {
+	describe('.debug(message)', function() {
 
-		it('returns the message decorated for CLI output', () => {
+		it('returns the message decorated for CLI output', function() {
 			assert.strictEqual(cliReporter.debug('mock message'), ' > Debug: mock message');
 		});
 

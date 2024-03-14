@@ -4,12 +4,12 @@ const assert = require('proclaim');
 const mockery = require('mockery');
 const path = require('path');
 
-describe('lib/reporters/html', () => {
+describe('lib/reporters/html', function() {
 	let fs;
 	let mustache;
 	let reporter;
 
-	beforeEach(() => {
+	beforeEach(function() {
 		fs = require('../../mock/fs.mock');
 		mockery.registerMock('fs', fs);
 		mustache = require('../../mock/mustache.mock');
@@ -17,23 +17,23 @@ describe('lib/reporters/html', () => {
 		reporter = require('../../../../lib/reporters/html');
 	});
 
-	it('is an object', () => {
+	it('is an object', function() {
 		assert.isObject(reporter);
 	});
 
-	it('has a `supports` property', () => {
+	it('has a `supports` property', function() {
 		assert.isString(reporter.supports);
 	});
 
-	it('has a `results` method', () => {
+	it('has a `results` method', function() {
 		assert.isFunction(reporter.results);
 	});
 
-	describe('.results(pa11yResults)', () => {
+	describe('.results(pa11yResults)', function() {
 		let mockPa11yResults;
 		let resolvedValue;
 
-		beforeEach(async () => {
+		beforeEach(async function() {
 			mockPa11yResults = {
 				documentTitle: 'mock title',
 				pageUrl: 'http://mock-url/',
@@ -48,12 +48,12 @@ describe('lib/reporters/html', () => {
 			resolvedValue = await reporter.results(mockPa11yResults);
 		});
 
-		it('reads the report HTML template', () => {
+		it('reads the report HTML template', function() {
 			assert.calledOnce(fs.readFile);
 			assert.calledWith(fs.readFile, path.resolve(`${__dirname}/../../../../lib/reporters/report.html`), 'utf-8');
 		});
 
-		it('renders the template with a context object that uses the Pa11y results', () => {
+		it('renders the template with a context object that uses the Pa11y results', function() {
 			assert.calledOnce(mustache.render);
 			assert.isString(mustache.render.firstCall.args[0]);
 
@@ -68,33 +68,33 @@ describe('lib/reporters/html', () => {
 			assert.strictEqual(renderContext.issues[0].typeLabel, 'Error');
 		});
 
-		it('resolves with the rendered template', () => {
+		it('resolves with the rendered template', function() {
 			assert.strictEqual(resolvedValue, 'mock rendered template');
 		});
 
 	});
 
-	it('has an `error` method', () => {
+	it('has an `error` method', function() {
 		assert.isFunction(reporter.error);
 	});
 
-	describe('.error(message)', () => {
+	describe('.error(message)', function() {
 
-		it('returns the message unchanged', () => {
+		it('returns the message unchanged', function() {
 			assert.strictEqual(reporter.error('mock message'), 'mock message');
 		});
 
 	});
 
-	it('does not have a `begin` method', () => {
+	it('does not have a `begin` method', function() {
 		assert.isUndefined(reporter.begin);
 	});
 
-	it('does not have a `debug` method', () => {
+	it('does not have a `debug` method', function() {
 		assert.isUndefined(reporter.debug);
 	});
 
-	it('does not have an `info` method', () => {
+	it('does not have an `info` method', function() {
 		assert.isUndefined(reporter.info);
 	});
 

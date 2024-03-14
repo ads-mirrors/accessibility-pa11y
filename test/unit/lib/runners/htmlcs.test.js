@@ -4,12 +4,12 @@ const path = require('path');
 const assert = require('proclaim');
 const sinon = require('sinon');
 
-describe('lib/runners/htmlcs', () => {
+describe('lib/runners/htmlcs', function() {
 	let issues;
 	let originalWindow;
 	let runner;
 
-	beforeEach(() => {
+	beforeEach(function() {
 
 		issues = [
 			{
@@ -50,34 +50,34 @@ describe('lib/runners/htmlcs', () => {
 		runner = require('../../../../lib/runners/htmlcs');
 	});
 
-	afterEach(() => {
+	afterEach(function() {
 		global.window = originalWindow;
 	});
 
-	it('is an object', () => {
+	it('is an object', function() {
 		assert.isObject(runner);
 	});
 
-	it('has a `supports` property set to a string', () => {
+	it('has a `supports` property set to a string', function() {
 		assert.isString(runner.supports);
 	});
 
-	it('has a `scripts` property set to an array of scripts the runner is dependent on', () => {
+	it('has a `scripts` property set to an array of scripts the runner is dependent on', function() {
 		assert.isArray(runner.scripts);
 		assert.lengthEquals(runner.scripts, 1);
 		assert.isTrue(runner.scripts[0].endsWith(path.join('node_modules', 'html_codesniffer', 'build', 'HTMLCS.js')));
 	});
 
-	it('has a `run` method', () => {
+	it('has a `run` method', function() {
 		assert.isFunction(runner.run);
 	});
 
-	describe('.run(options, pa11y)', () => {
+	describe('.run(options, pa11y)', function() {
 		let options;
 		let pa11y;
 		let resolvedValue;
 
-		beforeEach(async () => {
+		beforeEach(async function() {
 			options = {
 				rules: [],
 				standard: 'mock-standard'
@@ -86,7 +86,7 @@ describe('lib/runners/htmlcs', () => {
 			resolvedValue = await runner.run(options, pa11y);
 		});
 
-		it('runs HTML CodeSniffer', () => {
+		it('runs HTML CodeSniffer', function() {
 			assert.calledOnce(global.window.HTMLCS.process);
 			assert.calledWith(
 				global.window.HTMLCS.process,
@@ -95,12 +95,12 @@ describe('lib/runners/htmlcs', () => {
 			);
 		});
 
-		it('gets HTML CodeSniffer messages', () => {
+		it('gets HTML CodeSniffer messages', function() {
 			assert.calledOnce(global.window.HTMLCS.getMessages);
 			assert.calledWithExactly(global.window.HTMLCS.getMessages);
 		});
 
-		it('resolves with processed and normalised issues', () => {
+		it('resolves with processed and normalised issues', function() {
 			assert.deepEqual(resolvedValue, [
 				{
 					code: 'mock-code-1',
@@ -129,11 +129,11 @@ describe('lib/runners/htmlcs', () => {
 			]);
 		});
 
-		describe('when HTML CodeSniffer errors', () => {
+		describe('when HTML CodeSniffer errors', function() {
 			let htmlcsError;
 			let rejectedError;
 
-			beforeEach(async () => {
+			beforeEach(async function() {
 				htmlcsError = new Error('htmlcs error');
 				window.HTMLCS.process.reset();
 				window.HTMLCS.process.yieldsAsync(htmlcsError);
@@ -145,19 +145,19 @@ describe('lib/runners/htmlcs', () => {
 				}
 			});
 
-			it('rejects with the HTML CodeSniffer error', () => {
+			it('rejects with the HTML CodeSniffer error', function() {
 				assert.strictEqual(rejectedError, htmlcsError);
 			});
 
-			it('does not get HTML CodeSniffer messages', () => {
+			it('does not get HTML CodeSniffer messages', function() {
 				assert.notCalled(window.HTMLCS.getMessages);
 			});
 
 		});
 
-		describe('when the rules option is set', () => {
+		describe('when the rules option is set', function() {
 
-			beforeEach(async () => {
+			beforeEach(async function() {
 				global.window['HTMLCS_mock-standard'] = {
 					sniffs: [
 						{
@@ -182,7 +182,7 @@ describe('lib/runners/htmlcs', () => {
 				resolvedValue = await runner.run(options, pa11y);
 			});
 
-			it('adds the specified rules to the standard', () => {
+			it('adds the specified rules to the standard', function() {
 				assert.deepEqual(global.window['HTMLCS_mock-standard'].sniffs[0].include, [
 					'mock-rule-1',
 					'mock-rule-2',
@@ -190,10 +190,10 @@ describe('lib/runners/htmlcs', () => {
 				]);
 			});
 
-			describe('and one of the rules does not exist', () => {
+			describe('and one of the rules does not exist', function() {
 				let rejectedError;
 
-				beforeEach(async () => {
+				beforeEach(async function() {
 					options.rules = [
 						'mock-rule-5'
 					];
@@ -204,7 +204,7 @@ describe('lib/runners/htmlcs', () => {
 					}
 				});
 
-				it('rejects with an error', () => {
+				it('rejects with an error', function() {
 					assert.instanceOf(rejectedError, Error);
 					assert.strictEqual(
 						rejectedError.message,
@@ -216,10 +216,10 @@ describe('lib/runners/htmlcs', () => {
 
 		});
 
-		describe('when the site is using AMD', () => {
+		describe('when the site is using AMD', function() {
 			let htmlcsModule;
 
-			beforeEach(async () => {
+			beforeEach(async function() {
 				htmlcsModule = {
 					HTMLCS: {
 						process: sinon.stub().yieldsAsync(),
@@ -236,7 +236,7 @@ describe('lib/runners/htmlcs', () => {
 				await runner.run(options, pa11y);
 			});
 
-			it('calls require', () => {
+			it('calls require', function() {
 				assert.calledOnce(global.window.require);
 				assert.calledOnce(htmlcsModule.HTMLCS.process);
 				sinon.assert.calledWith(

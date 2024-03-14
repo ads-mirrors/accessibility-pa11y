@@ -293,8 +293,8 @@ describe('lib/pa11y', function() {
 			};
 		});
 
-		describe('with basic options', () => {
-			beforeEach(async () => {
+		describe('with basic options', function() {
+			beforeEach(async function() {
 				await pa11y(options);
 			});
 
@@ -915,7 +915,7 @@ describe('lib/pa11y', function() {
 		let callbackError;
 		let callbackResults;
 
-		beforeEach(done => {
+		beforeEach(function(done) {
 			pa11y('https://mock-url/', (error, results) => {
 				callbackError = error;
 				callbackResults = results;
@@ -930,7 +930,7 @@ describe('lib/pa11y', function() {
 		describe('when something errors', function() {
 			let headlessChromeError;
 
-			beforeEach(done => {
+			beforeEach(function(done) {
 				headlessChromeError = new Error('headless chrome error');
 				puppeteer.mockBrowser.close.resetHistory();
 				puppeteer.mockPage.goto.rejects(headlessChromeError);

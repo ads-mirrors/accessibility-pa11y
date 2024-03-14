@@ -4,12 +4,12 @@ const assert = require('proclaim');
 const sinon = require('sinon');
 const path = require('path');
 
-describe('lib/runners/axe', () => {
+describe('lib/runners/axe', function() {
 	let result;
 	let originalWindow;
 	let runner;
 
-	beforeEach(() => {
+	beforeEach(function() {
 
 		result = {
 			violations: [
@@ -120,19 +120,19 @@ describe('lib/runners/axe', () => {
 		runner = require('../../../../lib/runners/axe');
 	});
 
-	afterEach(() => {
+	afterEach(function() {
 		global.window = originalWindow;
 	});
 
-	it('is an object', () => {
+	it('is an object', function() {
 		assert.isObject(runner);
 	});
 
-	it('has a `supports` property set to a string', () => {
+	it('has a `supports` property set to a string', function() {
 		assert.isString(runner.supports);
 	});
 
-	it('has a `scripts` property set to an array of scripts the runner is dependent on', () => {
+	it('has a `scripts` property set to an array of scripts the runner is dependent on', function() {
 		const scriptPath =
 			`${path.resolve(__dirname, '..', '..', '..', '..')}` +
 			`${path.normalize('/node_modules/axe-core')}/axe.min.js`;
@@ -140,22 +140,22 @@ describe('lib/runners/axe', () => {
 		assert.deepEqual(runner.scripts, [scriptPath]);
 	});
 
-	it('has a `run` method', () => {
+	it('has a `run` method', function() {
 		assert.isFunction(runner.run);
 	});
 
-	describe('.run(options, pa11y)', () => {
+	describe('.run(options, pa11y)', function() {
 		let options;
 		let pa11y;
 		let resolvedValue;
 
-		beforeEach(async () => {
+		beforeEach(async function() {
 			options = {};
 			pa11y = {};
 			resolvedValue = await runner.run(options, pa11y);
 		});
 
-		it('runs aXe', () => {
+		it('runs aXe', function() {
 			assert.calledOnce(global.window.axe.run);
 			assert.calledWithExactly(
 				global.window.axe.run,
@@ -164,7 +164,7 @@ describe('lib/runners/axe', () => {
 			);
 		});
 
-		it('resolves with processed and normalised issues', () => {
+		it('resolves with processed and normalised issues', function() {
 			assert.deepEqual(resolvedValue, [
 				{
 					code: 'mock-id-1',
@@ -253,16 +253,16 @@ describe('lib/runners/axe', () => {
 			]);
 		});
 
-		describe('when passing the Pa11y option', () => {
-			describe('rootElement', () => {
+		describe('when passing the Pa11y option', function() {
+			describe('rootElement', function() {
 				const cssSelector = '#main';
 
-				beforeEach(async () => {
+				beforeEach(async function() {
 					options.rootElement = cssSelector;
 					await runner.run(options, pa11y);
 				});
 
-				it('sets the aXe context', () => {
+				it('sets the aXe context', function() {
 					assert.calledWithExactly(
 						global.window.axe.run,
 						cssSelector,
@@ -271,8 +271,8 @@ describe('lib/runners/axe', () => {
 				});
 			});
 
-			describe('standard', () => {
-				it('supports level A', async () => {
+			describe('standard', function() {
+				it('supports level A', async function() {
 					options.standard = 'WCAG2A';
 					await runner.run(options, pa11y);
 					assert.calledWithExactly(
@@ -285,7 +285,7 @@ describe('lib/runners/axe', () => {
 					);
 				});
 
-				it('supports level AA', async () => {
+				it('supports level AA', async function() {
 					options.standard = 'WCAG2AA';
 					await runner.run(options, pa11y);
 					assert.calledWithExactly(
@@ -299,8 +299,8 @@ describe('lib/runners/axe', () => {
 				});
 			});
 
-			describe('rules', () => {
-				beforeEach(async () => {
+			describe('rules', function() {
+				beforeEach(async function() {
 					options.rules = ['color-contrast', 'autocomplete-valid', 'something-else'];
 					global.window.axe.getRules = sinon.stub().returns([
 						{ruleId: 'color-contrast'},
@@ -309,7 +309,7 @@ describe('lib/runners/axe', () => {
 					await runner.run(options, pa11y);
 				});
 
-				it('sets the aXe rules', () => {
+				it('sets the aXe rules', function() {
 					assert.calledWithExactly(
 						global.window.axe.run,
 						sinon.match.any,
@@ -321,8 +321,8 @@ describe('lib/runners/axe', () => {
 				});
 			});
 
-			describe('ignore', () => {
-				beforeEach(async () => {
+			describe('ignore', function() {
+				beforeEach(async function() {
 					options.ignore = ['warning', 'notice', 'color-contrast', 'autocomplete-valid'];
 					global.window.axe.getRules = sinon.stub().returns([
 						{ruleId: 'color-contrast'},
@@ -331,7 +331,7 @@ describe('lib/runners/axe', () => {
 					await runner.run(options, pa11y);
 				});
 
-				it('sets the aXe ignore rules', () => {
+				it('sets the aXe ignore rules', function() {
 					assert.calledWithExactly(
 						global.window.axe.run,
 						sinon.match.any,
@@ -344,11 +344,11 @@ describe('lib/runners/axe', () => {
 			});
 		});
 
-		describe('when aXe errors', () => {
+		describe('when aXe errors', function() {
 			let axeError;
 			let rejectedError;
 
-			beforeEach(async () => {
+			beforeEach(async function() {
 				axeError = new Error('axe error');
 				window.axe.run.reset();
 				window.axe.run.rejects(axeError);
@@ -359,7 +359,7 @@ describe('lib/runners/axe', () => {
 				}
 			});
 
-			it('rejects with the aXe error', () => {
+			it('rejects with the aXe error', function() {
 				assert.strictEqual(rejectedError, axeError);
 			});
 
