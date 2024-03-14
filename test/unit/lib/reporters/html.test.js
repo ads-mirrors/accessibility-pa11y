@@ -1,24 +1,32 @@
 'use strict';
 
+const assert = require('proclaim');
+const mockery = require('mockery');
 const path = require('path');
-const fs = require('fs');
-const mustache = require('mustache');
-const reporter = require('../../../../lib/reporters/html');
-
-jest.mock('fs', () => require('../../mocks/fs.mock'));
-jest.mock('mustache', () => require('../../mocks/mustache.mock'));
 
 describe('lib/reporters/html', () => {
+	let fs;
+	let hogan;
+	let reporter;
+
+	beforeEach(() => {
+		fs = require('../../mock/fs');
+		mockery.registerMock('fs', fs);
+		hogan = require('../../mock/hogan');
+		mockery.registerMock('hogan.js', hogan);
+		reporter = require('../../../../lib/reporters/html');
+	});
+
 	it('is an object', () => {
-		expect(typeof reporter).toBe('object');
+		assert.isObject(reporter);
 	});
 
 	it('has a `supports` property', () => {
-		expect(reporter.supports).toEqual(expect.any(String));
+		assert.isString(reporter.supports);
 	});
 
 	it('has a `results` method', () => {
-		expect(reporter.results).toEqual(expect.any(Function));
+		assert.isFunction(reporter.results);
 	});
 
 	describe('.results(pa11yResults)', () => {
@@ -35,69 +43,63 @@ describe('lib/reporters/html', () => {
 					}
 				]
 			};
-			fs.readFile
-				.mockImplementationOnce((_, __, handler) => handler(null, 'mock template content'));
-			mustache.render.mockReturnValue('mock rendered template');
-
+			fs.readFile.yieldsAsync(null, 'mock template content');
+			mustache.render.returns('mock rendered template');
 			resolvedValue = await reporter.results(mockPa11yResults);
 		});
 
 		it('reads the report HTML template', () => {
-			expect(fs.readFile).toHaveBeenCalledTimes(1);
-			expect(fs.readFile).toHaveBeenCalledWith(
-				path.resolve(
-					`${__dirname}/../../../../lib/reporters/report.html`
-				),
-				'utf-8',
-				expect.any(Function)
-			);
+			assert.calledOnce(fs.readFile);
+			assert.calledWith(fs.readFile, path.resolve(`${__dirname}/../../../../lib/reporters/report.html`), 'utf-8');
+		});
+
+		it('compiles the template string', () => {
+			assert.calledOnce(hogan.compile);
+			assert.calledWith(hogan.compile, 'mock template content');
 		});
 
 		it('renders the template with a context object that uses the Pa11y results', () => {
-			expect(mustache.render).toHaveBeenCalledTimes(1);
-			expect(typeof mustache.render.mock.calls[0][0]).toBe(
-				'string'
-			);
-			expect(typeof mustache.render.mock.calls[0][1]).toBe(
-				'object'
-			);
-			const renderContext = mustache.render.mock.calls[0][1];
-			expect(renderContext.date).toEqual(expect.any(Date));
-			expect(renderContext.documentTitle).toEqual(
-				mockPa11yResults.documentTitle
-			);
-			expect(renderContext.pageUrl).toEqual(mockPa11yResults.pageUrl);
-			expect(renderContext.errorCount).toEqual(1);
-			expect(renderContext.warningCount).toEqual(0);
-			expect(renderContext.noticeCount).toEqual(0);
-			expect(renderContext.issues[0]).toEqual(mockPa11yResults.issues[0]);
-			expect(renderContext.issues[0].typeLabel).toEqual('Error');
+			assert.calledOnce(hogan.mockTemplate.render);
+			assert.isObject(hogan.mockTemplate.render.firstCall.args[0]);
+			const renderContext = hogan.mockTemplate.render.firstCall.args[0];
+			assert.instanceOf(renderContext.date, Date);
+			assert.strictEqual(renderContext.documentTitle, mockPa11yResults.documentTitle);
+			assert.strictEqual(renderContext.pageUrl, mockPa11yResults.pageUrl);
+			assert.strictEqual(renderContext.errorCount, 1);
+			assert.strictEqual(renderContext.warningCount, 0);
+			assert.strictEqual(renderContext.noticeCount, 0);
+			assert.strictEqual(renderContext.issues[0], mockPa11yResults.issues[0]);
+			assert.strictEqual(renderContext.issues[0].typeLabel, 'Error');
 		});
 
 		it('resolves with the rendered template', () => {
-			expect(resolvedValue).toEqual('mock rendered template');
+			assert.strictEqual(resolvedValue, 'mock rendered template');
 		});
+
 	});
 
 	it('has an `error` method', () => {
-		expect(reporter.error).toEqual(expect.any(Function));
+		assert.isFunction(reporter.error);
 	});
 
 	describe('.error(message)', () => {
+
 		it('returns the message unchanged', () => {
-			expect(reporter.error('mock message')).toEqual('mock message');
+			assert.strictEqual(reporter.error('mock message'), 'mock message');
 		});
+
 	});
 
 	it('does not have a `begin` method', () => {
-		expect(reporter.begin).toBeUndefined();
+		assert.isUndefined(reporter.begin);
 	});
 
 	it('does not have a `debug` method', () => {
-		expect(reporter.debug).toBeUndefined();
+		assert.isUndefined(reporter.debug);
 	});
 
 	it('does not have an `info` method', () => {
-		expect(reporter.info).toBeUndefined();
+		assert.isUndefined(reporter.info);
 	});
+
 });

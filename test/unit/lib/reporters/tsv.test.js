@@ -1,19 +1,24 @@
 'use strict';
 
-const tsvReporter = require('../../../../lib/reporters/tsv');
+const assert = require('proclaim');
 
 describe('lib/reporters/tsv', () => {
+	let tsvReporter;
+
+	beforeEach(() => {
+		tsvReporter = require('../../../../lib/reporters/tsv');
+	});
 
 	it('is an object', () => {
-		expect(typeof tsvReporter).toBe('object');
+		assert.isObject(tsvReporter);
 	});
 
 	it('has a `supports` property', () => {
-		expect(tsvReporter.supports).toEqual(expect.any(String));
+		assert.isString(tsvReporter.supports);
 	});
 
 	it('has a `results` method', () => {
-		expect(tsvReporter.results).toEqual(expect.any(Function));
+		assert.isFunction(tsvReporter.results);
 	});
 
 	describe('.results(pa11yResults)', () => {
@@ -50,7 +55,7 @@ describe('lib/reporters/tsv', () => {
 		});
 
 		it('returns a TSV string representing the results', () => {
-			expect(tsvReporter.results(mockPa11yResults)).toEqual(`
+			assert.strictEqual(tsvReporter.results(mockPa11yResults), `
 				"type"	"code"	"message"	"context"	"selector"
 				"mock-type-1"	"mock-code-1"	"mock-message-1"	"mock-context-1"	"mock-selector-1"
 				"mock-type-2"	"mock-code-2"	"mock-message-2"	"mock-context-2"	"mock-selector-2"
@@ -61,27 +66,27 @@ describe('lib/reporters/tsv', () => {
 	});
 
 	it('has an `error` method', () => {
-		expect(tsvReporter.error).toEqual(expect.any(Function));
+		assert.isFunction(tsvReporter.error);
 	});
 
 	describe('.error(message)', () => {
 
 		it('returns the message unchanged', () => {
-			expect(tsvReporter.error('mock message')).toEqual('mock message');
+			assert.strictEqual(tsvReporter.error('mock message'), 'mock message');
 		});
 
 	});
 
 	it('does not have a `begin` method', () => {
-		expect(tsvReporter.begin).toBeUndefined();
+		assert.isUndefined(tsvReporter.begin);
 	});
 
 	it('does not have a `debug` method', () => {
-		expect(tsvReporter.debug).toBeUndefined();
+		assert.isUndefined(tsvReporter.debug);
 	});
 
 	it('does not have an `info` method', () => {
-		expect(tsvReporter.info).toBeUndefined();
+		assert.isUndefined(tsvReporter.info);
 	});
 
 });

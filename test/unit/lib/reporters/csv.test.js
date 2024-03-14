@@ -1,18 +1,24 @@
 'use strict';
 
-const csvReporter = require('../../../../lib/reporters/csv');
+const assert = require('proclaim');
 
 describe('lib/reporters/csv', () => {
+	let csvReporter;
+
+	beforeEach(() => {
+		csvReporter = require('../../../../lib/reporters/csv');
+	});
+
 	it('is an object', () => {
-		expect(typeof csvReporter).toBe('object');
+		assert.isObject(csvReporter);
 	});
 
 	it('has a `supports` property', () => {
-		expect(csvReporter.supports).toEqual(expect.any(String));
+		assert.isString(csvReporter.supports);
 	});
 
 	it('has a `results` method', () => {
-		expect(csvReporter.results).toEqual(expect.any(Function));
+		assert.isFunction(csvReporter.results);
 	});
 
 	describe('.results(pa11yResults)', () => {
@@ -49,7 +55,7 @@ describe('lib/reporters/csv', () => {
 		});
 
 		it('returns a CSV string representing the results', () => {
-			expect(csvReporter.results(mockPa11yResults)).toEqual(`
+			assert.strictEqual(csvReporter.results(mockPa11yResults), `
 				"type","code","message","context","selector"
 				"mock-type-1","mock-code-1","mock-message-1","mock-context-1","mock-selector-1"
 				"mock-type-2","mock-code-2","mock-message-2","mock-context-2","mock-selector-2"
@@ -60,27 +66,27 @@ describe('lib/reporters/csv', () => {
 	});
 
 	it('has an `error` method', () => {
-		expect(csvReporter.error).toEqual(expect.any(Function));
+		assert.isFunction(csvReporter.error);
 	});
 
 	describe('.error(message)', () => {
 
 		it('returns the message unchanged', () => {
-			expect(csvReporter.error('mock message')).toEqual('mock message');
+			assert.strictEqual(csvReporter.error('mock message'), 'mock message');
 		});
 
 	});
 
 	it('does not have a `begin` method', () => {
-		expect(csvReporter.begin).toBeUndefined();
+		assert.isUndefined(csvReporter.begin);
 	});
 
 	it('does not have a `debug` method', () => {
-		expect(csvReporter.debug).toBeUndefined();
+		assert.isUndefined(csvReporter.debug);
 	});
 
 	it('does not have an `info` method', () => {
-		expect(csvReporter.info).toBeUndefined();
+		assert.isUndefined(csvReporter.info);
 	});
 
 });
