@@ -47,10 +47,6 @@ describe('lib/option', function() {
 
 	});
 
-	it('is a function', function() {
-		assert.isFunction(parseArguments);
-	});
-
 	describe('parseArguments(url, options, defaults, callback)', function() {
 		let url;
 		let options;
@@ -72,6 +68,10 @@ describe('lib/option', function() {
 					'htmlcs'
 				]
 			};
+		});
+
+		it('is a function', function() {
+			assert.isFunction(parseArguments);
 		});
 
 		it('defaults the options object with `pa11y.defaults`', function() {
@@ -218,13 +218,9 @@ describe('lib/option', function() {
 		});
 
 		describe('when `url` does not have a scheme and is an absolute path', function() {
-			const absolutePath = path.resolve(process.cwd(), './mock-path');
-
-			beforeEach(function() {
-				[url, options, callback] = parseArguments(absolutePath, {}, {});
-			});
-
 			it('navigates to `url` with a `file` scheme added', function() {
+				const absolutePath = path.resolve(process.cwd(), './mock-path');
+				[url] = parseArguments(absolutePath, {}, {});
 				assert.equal(url, `file://${absolutePath}`);
 			});
 		});
@@ -243,16 +239,16 @@ describe('lib/option', function() {
 
 	});
 
-	it('is a function', function() {
-		assert.isFunction(verifyOptions);
-	});
-
 	describe('verifyOptions(options, allowedStandards)', function() {
 		const allowedStandards = [
 			'WCAG2A',
 			'WCAG2AA',
 			'WCAG2AAA'
 		];
+
+		it('is a function', function() {
+			assert.isFunction(verifyOptions);
+		});
 
 		describe('when `options.standard` is invalid', function() {
 			const options = {};
