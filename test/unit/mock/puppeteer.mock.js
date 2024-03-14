@@ -19,7 +19,7 @@ const mockPage = (puppeteer.mockPage = {
 	focus: sinon.stub().resolves(),
 	goto: sinon.stub().resolves(),
 	on: sinon.stub(),
-	removeListener: sinon.stub(),
+	off: sinon.stub(),
 	screenshot: sinon.stub().resolves(),
 	setExtraHTTPHeaders: sinon.stub().resolves(),
 	setRequestInterception: sinon.stub().resolves(),
