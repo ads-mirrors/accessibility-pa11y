@@ -10,7 +10,7 @@ describe('lib/reporters/html', () => {
 	let reporter;
 
 	beforeEach(() => {
-		fs = require('../../mock/fs');
+		fs = require('../../mock/fs.mock');
 		mockery.registerMock('fs', fs);
 		mustache = require('../../mock/mustache');
 		mockery.registerMock('mustache.js', mustache);
