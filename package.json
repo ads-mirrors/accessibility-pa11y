@@ -45,11 +45,11 @@
     "semver": "~7.6.0"
   },
   "devDependencies": {
+    "c8": "^9.1.0",
     "eslint": "^8.57.0",
     "eslint-plugin-mocha": "^10.4.1",
     "mocha": "^10.3.0",
     "mockery": "^2.1.0",
-    "nyc": "^15.1.0",
     "pa11y-lint-config": "^3.0.0",
     "proclaim": "^3.6.0",
     "sinon": "^17.0.1"
@@ -60,9 +60,9 @@
   },
   "scripts": {
     "lint": "eslint .",
-    "verify-coverage": "nyc check-coverage --lines 90 --functions 90 --branches 90",
+    "verify-coverage": "c8 check-coverage --lines 90 --functions 90 --branches 90",
     "test-unit": "mocha --file test/unit/setup.test.js 'test/unit/**/*.test.js' --recursive",
-    "test-coverage": "nyc --reporter=text --reporter=html -- npm run test-unit",
+    "test-coverage": "c8 --reporter=text --reporter=html -- npm run test-unit",
     "test-integration": "mocha --file test/integration/setup.test.js test/integration/**/*.test.js --recursive --timeout 10000 --slow 5000",
     "test": "npm run test-coverage && npm run verify-coverage && npm run test-integration"
   },
