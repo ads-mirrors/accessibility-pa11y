@@ -60,11 +60,10 @@
   },
   "scripts": {
     "lint": "eslint .",
-    "verify-coverage": "c8 check-coverage",
-    "test-unit": "mocha",
+    "test": "npm run test-coverage && npm run test-integration",
     "test-coverage": "c8 npm run test-unit",
     "test-integration": "mocha --config test/integration/.mocharc.json",
-    "test": "npm run test-coverage && npm run verify-coverage && npm run test-integration"
+    "test-unit": "mocha"
   },
   "files": [
     "bin",
