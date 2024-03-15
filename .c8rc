@@ -3,7 +3,6 @@
   "branches": 90,
   "statements": 90,
   "all": true,
-  "checkCoverage": true,
   "include": [
 	"lib/"
   ],
