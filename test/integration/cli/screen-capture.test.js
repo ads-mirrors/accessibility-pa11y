@@ -18,7 +18,7 @@ describe('CLI screen-capture', function() {
 
 		before(async function() {
 			screenCaptureDirectory = path.join(__dirname, '/../tmp');
-			screenCapturePath = path.join(screenCaptureDirectory, '/test.png');
+			screenCapturePath = path.join(screenCaptureDirectory, '/screen-capture-flag-test.png');
 			try {
 				await mkdir(screenCaptureDirectory);
 			} catch (error) {}
