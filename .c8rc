@@ -5,7 +5,6 @@
   "all": true,
   "checkCoverage": true,
   "include": [
-	"bin/",
 	"lib/"
   ],
   "reporter": [
