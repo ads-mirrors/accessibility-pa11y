@@ -218,9 +218,9 @@ describe('lib/pa11y', function() {
 
 		});
 
-		describe('when `url` does not have a scheme and is an absolute pat', function() {
+		describe('when `url` does not have a scheme and is an absolute path', function() {
 
-			it('navigates to `url` with an `file` scheme added', async function() {
+			it('navigates to `url` with a `file` scheme added', async function() {
 				const absolutePath = path.resolve(process.cwd(), './mock-path');
 				puppeteer.mockPage.goto.resetHistory();
 				resolvedValue = await pa11y(absolutePath);
